@@ -4,7 +4,7 @@ export default class GotService {
     this._apiBase = 'https://www.anapioficeandfire.com/api';
   }
 
-  async getResourse(url){
+  async getResource(url){
     const res = await fetch(`${this._apiBase}${url}`);
 
     if (!res.ok) {
@@ -15,31 +15,36 @@ export default class GotService {
   }
 
   async getAllBooks() {
-    const res = await this.getResourse('/books');
+    const res = await this.getResource('/books');
     return res.map(this._transformBooks);
   }
 
   async getBook(id) {
-    const book = await this.getResourse(`/books/${id}`);
+    const book = await this.getResource(`/books/${id}`);
     return this._transformBooks(book);
   }
 
   async getAllCaracters() {
-    const res = await this.getResourse('/characters?page=5&pageSize=10');
-    return res.map(this._transformChsracter);
+    const res = await this.getResource(`/characters?page=7&pageSize=10`);
+    
+    return res.map((item) => {
+      return this._transformCharacter(item);
+    });
   }
+
+  
   async getCharecter(id) {
-    const character = await this.getResourse(`/characters/${id}`);
-    return this._transformChsracter(character);
+    const character = await this.getResource(`/characters/${id}`);
+    return this._transformCharacter(character);
   }
 
   async getAllHouses() {
-    const res = await this.getResourse('/houses');
+    const res = await this.getResource('/houses');
     return res.map(this._transformHouse);
   }
 
   async getHouses(id) {
-    const house = await this.getResourse(`/houses/${id}`);
+    const house = await this.getResource(`/houses/${id}`);
     return this._transformHouse(house);
   }
 
@@ -51,13 +56,14 @@ export default class GotService {
     }
   }
 
-  _transformChsracter(char) {
+  _transformCharacter(char) {
     return {
       name: this.isSet(char.name),
       gender: this.isSet(char.gender),
       born: this.isSet(char.born),
       died: this.isSet(char.died),
-      culture: this.isSet(char.culture)
+      culture: this.isSet(char.culture),
+      id: char.url.replace(this._apiBase + '/characters/', '')
     };
   }
 
