@@ -35,7 +35,7 @@ export default class RandomChar extends Component {
   componentDidMount() {
     this.updateChar();
     this.timerId = setInterval(this.updateChar, 5000);
-  };
+  }
 
   componentWillUnmount() {
     clearInterval(this.timerId);
@@ -48,7 +48,7 @@ export default class RandomChar extends Component {
     });
   }
 
-  onError = (err) => {
+  onError = () => {
     this.setState({
       error: true,
       loading: false

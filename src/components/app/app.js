@@ -3,8 +3,9 @@ import {Col, Row, Container} from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import PersonDetails from '../personDetails';
+import CharacterPage from '../pages/characterPage';
+import BooksPage from '../pages/booksPage';
+import HousesPage from '../pages/housesPage';
 import ErrorMessage from '../errorMessage';
 
 const ButtonToggle = styled.button`
@@ -22,30 +23,28 @@ export default class App extends Component {
 
   state = {
     randomChar: true,
-    selectedChar: null,
     error: false
+  };
+
+  componentDidCatch() {
+    this.setState({
+      error: true
+    });
   }
 
   onToggleBlock = () => {
     this.setState((state) => {
       return {
         randomChar: !state.randomChar
-      }
-    });
-  };
-
-  onCharSelected = (id) => {
-    console.log(id);
-    this.setState({
-      selectedChar: id
+      };
     });
   };
 
   render() {
-    const {randomChar, erorr} = this.state;
+    const {randomChar, error} = this.state;
 
-    if (erorr) {
-      return <ErrorMessage/>
+    if (error) {
+      return <ErrorMessage/>;
     }
 
     const randomBlock = randomChar ? <RandomChar/> : null;
@@ -62,14 +61,9 @@ export default class App extends Component {
               <ButtonToggle onClick={this.onToggleBlock}>Toggle Random Char</ButtonToggle>
             </Col>
           </Row>
-          <Row>
-            <Col md='6'>
-              <ItemList onCharSelected={this.onCharSelected}/>
-            </Col>
-            <Col md='6'>
-              <PersonDetails charId={this.state.selectedChar}/>
-            </Col>
-          </Row>
+          <CharacterPage/>
+          <BooksPage/>
+          <HousesPage/>
         </Container>
       </>
     );

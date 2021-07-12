@@ -1,55 +1,97 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import GotService from '../../services/GotService';
 import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
 
 const ListGroup = styled.ul`
-  .list-group-item {
+  border-radius: 0.25rem;
+  background-color: #fff;
+  overflow: hidden;
+
+  .list-item {
+    position: relative;
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #212529;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
     cursor: pointer;
   }
+  .list-item.active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 `;
+
 
 export default class ItemList extends Component {
   constructor(props) {
     super(props);
   }
 
-  gotService = new GotService();
-
   state = {
-    charList: null
-  }
+    itemList: null,
+    index: 0,
+    loader: true,
+    error: false
+  };
 
   componentDidMount() {
-    this.gotService.getAllCaracters()
-        .then((charList) => {
-          this.setState({charList});
+    const {getData} = this.props;
+    getData()
+        .then((itemList) => {
+          this.setState({
+            itemList,
+            loader: false
+          });
+          const {id} = this.state.itemList[0];
+          this.props.onItemSelected(id);
+        })
+        .catch(() => {
+          this.onError();
         });
   }
 
+  onError() {
+    this.setState({
+      error: true,
+      loader: false
+    })
+  }
+
+  onClickItem = (index, id) => {
+    this.props.onItemSelected(id);
+    this.setState({index});
+  };
+
   renderItems(arr) {
-    return arr.map(item => {
-      const {name, id} = item;
+    return arr.map((item, index) => {
+      const {id} = item;
+      const clazz = index === this.state.index ? 'active list-item' : 'list-item';
+      const label = this.props.renderItem(item);
       return (
         <li
           key={id}
-          className="list-group-item"
-          onClick={() => this.props.onCharSelected(id)}>
-          {name}
+          className={clazz}
+          onClick={() => this.onClickItem(index, id)}>
+          {label}
         </li>
       )
     });
   }
 
   render() {
-    const {charList} = this.state;
+    const {itemList, error, loader} = this.state;
 
+    if (error) {
+      return <ErrorMessage/>
+    }
     
-    if (!charList) {
+    if (loader) {
       return <Spinner/>
     }
     
-    const items = this.renderItems(charList);
+    const items = this.renderItems(itemList);
 
     return (
       <ListGroup className="list-group">
