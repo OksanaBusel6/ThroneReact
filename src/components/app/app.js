@@ -3,9 +3,9 @@ import {Col, Row, Container} from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import {CharacterPage, BooksPage, HousesPage, BooksItem} from '../pages';
+import {CharacterPage, BooksPage, HousesPage, BooksItem, ErrorPage, HomePage} from '../pages';
 import ErrorMessage from '../errorMessage';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import got from './got.jpeg';
 
 const ButtonToggle = styled.button`
@@ -69,15 +69,19 @@ export default class App extends Component {
                 <ButtonToggle onClick={this.onToggleBlock}>Toggle Random Char</ButtonToggle>
               </Col>
             </Row>
-            <Route path="/characters" component={CharacterPage}/>
-            <Route path="/houses" component={HousesPage}/>
-            <Route path="/books" exact component={BooksPage}/>
-            <Route path="/books/:id" render={
-              ({match}) => {
-                const {params: {id}} = match;
-                return <BooksItem booksId={id}/>
-              }
-            }/>
+            <Switch>
+              <Route path="/" exact component={HomePage}/>
+              <Route path="/characters" component={CharacterPage}/>
+              <Route path="/houses" component={HousesPage}/>
+              <Route path="/books" exact component={BooksPage}/>
+              <Route path="/books/:id" render={
+                ({match}) => {
+                  const {params: {id}} = match;
+                  return <BooksItem booksId={id}/>
+                }
+              }/>
+              <Route component={ErrorPage}/>
+            </Switch>
           </Container>
         </AppContainer>
       </Router>
