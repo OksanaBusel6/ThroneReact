@@ -17,8 +17,9 @@ const ListGroup = styled.ul`
     background-color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.125);
     cursor: pointer;
+    transition: all .3s;
   }
-  .list-item.active {
+  .list-item:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
 `;
@@ -31,7 +32,6 @@ export default class ItemList extends Component {
 
   state = {
     itemList: null,
-    index: 0,
     loader: true,
     error: false
   };
@@ -44,8 +44,6 @@ export default class ItemList extends Component {
             itemList,
             loader: false
           });
-          const {id} = this.state.itemList[0];
-          this.props.onItemSelected(id);
         })
         .catch(() => {
           this.onError();
@@ -59,21 +57,17 @@ export default class ItemList extends Component {
     })
   }
 
-  onClickItem = (index, id) => {
-    this.props.onItemSelected(id);
-    this.setState({index});
-  };
-
   renderItems(arr) {
     return arr.map((item, index) => {
       const {id} = item;
       const clazz = index === this.state.index ? 'active list-item' : 'list-item';
       const label = this.props.renderItem(item);
+      const {onItemSelected} = this.props;
       return (
         <li
           key={id}
           className={clazz}
-          onClick={() => this.onClickItem(index, id)}>
+          onClick={() => onItemSelected(id)}>
           {label}
         </li>
       )

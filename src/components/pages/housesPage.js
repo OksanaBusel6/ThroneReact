@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import RowBlock from '../../rowBlock';
-import ItemList from '../../itemList';
-import ItemDetails, {Field} from '../../itemDetails/itemDetails';
-import ErrorMessage from '../../errorMessage';
-import GotService from '../../../services/GotService';
+import RowBlock from '../rowBlock';
+import ItemList from '../itemList';
+import ItemDetails, {Field} from '../itemDetails/itemDetails';
+import ErrorMessage from '../errorMessage';
+import GotService from '../../services/GotService';
 
 export default class HousesPage extends Component {
   constructor(props) {
