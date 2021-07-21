@@ -4,6 +4,7 @@ import ItemList from '../itemList';
 import ItemDetails, {Field} from '../itemDetails/itemDetails';
 import ErrorMessage from '../errorMessage';
 import GotService from '../../services/GotService';
+import widthData from '../widthData';
 
 export default class HousesPage extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export default class HousesPage extends Component {
   gotService = new GotService();
 
   state = {
-    selectedHouse: 1,
+    selectedHouse: '61',
     error: false
   };
 
@@ -30,11 +31,15 @@ export default class HousesPage extends Component {
       return <ErrorMessage/>;
     }
 
-    const itemList = (
-      <ItemList
-        getData={this.gotService.getAllHouses}
+    const HousesList = widthData(ItemList, this.gotService.getAllHouses);
+
+    const housesList = (
+      <HousesList
         onItemSelected={this.onHouseSelected}
-        renderItem={(item) => item.name}/>
+        renderItem={(item) => item.name}
+        changed
+        id={this.state.selectedHouse}
+        />
     );
 
     const itemDetails = (
@@ -50,7 +55,7 @@ export default class HousesPage extends Component {
     );
 
     return (
-      <RowBlock left={itemList} right={itemDetails}/>
+      <RowBlock left={housesList} right={itemDetails}/>
     );
   }
 }

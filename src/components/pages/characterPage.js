@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
-import ItemList from '../itemList';
+//import ItemList from '../itemList';
 import ItemDetails, {Field} from '../itemDetails';
 import ErrorMessage from '../errorMessage';
 import GotService from '../../services/GotService';
 import RowBlock from '../rowBlock';
-
-
+import ItemList from '../itemList';
+import widthData from '../widthData';
 
 export default class CharacterPage extends Component {
 
   gotService = new GotService();
 
   state = {
-    selectedChar: 67,
+    selectedChar: '61',
     error: false
   };
 
@@ -35,11 +35,14 @@ export default class CharacterPage extends Component {
       return <ErrorMessage/>;
     }
 
-    const itemList = (
-      <ItemList
+    const CharacterList = widthData(ItemList, this.gotService.getAllCharacters);
+
+    const characterList = (
+      <CharacterList
         onItemSelected={this.onCharSelected}
-        getData={this.gotService.getAllCharacters}
-        renderItem={({name, gender}) => `${name} (${gender})`}/>
+        renderItem={({name, gender}) => `${name} (${gender})`}
+        changed
+        id={this.state.selectedChar}/>
     );
 
     const itemDetails = (
@@ -54,7 +57,7 @@ export default class CharacterPage extends Component {
     );
 
     return (
-        <RowBlock left={itemList} right={itemDetails}/>
+        <RowBlock left={characterList} right={itemDetails}/>
     );
   }
 }

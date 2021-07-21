@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import ItemList from '../itemList';
+//import ItemList from '../itemList';
 import ErrorMessage from '../errorMessage';
 import GotService from '../../services/GotService';
 import {withRouter} from 'react-router-dom';
+import ItemList from '../itemList';
+import widthData from '../widthData';
 
 class BooksPage extends Component {
   constructor(props) {
@@ -28,14 +30,14 @@ class BooksPage extends Component {
       return <ErrorMessage/>;
     }
 
+    const BooksPage = widthData(ItemList, this.gotService.getAllBooks);
+
     return (
-      <ItemList
+      <BooksPage
         onItemSelected={(booksId) => {
           this.props.history.push(booksId)
         }}
-        renderItem={(item) => item.name}
-        getData={this.gotService.getAllBooks}
-        />
+        renderItem={(item) => item.name}/>
     );
   }
 }
