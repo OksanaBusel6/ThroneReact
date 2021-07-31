@@ -1,8 +1,5 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
-//import PropTypes from 'prop-types';
-//import GotService from '../../services/GotService';
-//import widthData from './../widthData';
 
 
 const ListGroup = styled.ul`
@@ -28,62 +25,41 @@ const ListGroup = styled.ul`
 `;
 
 
-export default class ItemList extends Component {
+function ItemList({id, changed, onItemSelected, renderItem, data}) {
+  const [index, changeId] = useState(id);
 
-  state = {
-    id: this.props.id
-  }
-
-  onChangeItem = (id) => {
-    const {changed} = this.props;
-    const {onItemSelected} = this.props;
-
+  function onChangeItem(id) {
     onItemSelected(id);
 
     if (changed) {
-      this.setState({id});
+      changeId(() => id);
     }
-
   }
 
-  renderItems(arr) {
+  function renderItems(arr) {
     return arr.map((item) => {
       const {id} = item;
-      const clazz = id === this.state.id ? 'active list-item' : 'list-item';
-      const label = this.props.renderItem(item);
+      const clazz = id === index ? 'active list-item' : 'list-item';
+      const label = renderItem(item);
 
       return (
         <li
           key={id}
           className={clazz}
-          onClick={() => this.onChangeItem(id)}>
+          onClick={() => onChangeItem(id)}>
           {label}
         </li>
       )
     });
   }
   
-  render() {
-    const {data} = this.props;
-    const items = this.renderItems(data);
-  
-    return (
-      <ListGroup className="list-group">
-        {items}
-      </ListGroup>
-    );
-  }
-}
-/* 
-ItemList.defaultProps = {
-  onItemSelected: () => {}
+  const items = renderItems(data);
+
+  return (
+    <ListGroup className="list-group">
+      {items}
+    </ListGroup>
+  );
 }
 
-ItemList.propTypes = {
-  onItemSelected: PropTypes.func,
-  //getData: PropTypes.arrayOf(PropTypes.object)
-}
- */
-
-
-//const {getAllCharacters} = new GotService();
+export default ItemList;
